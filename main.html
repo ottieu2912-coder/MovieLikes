@@ -1,0 +1,66 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Movies's Likes</title>
+    <link rel="stylesheet" type="text/css" href="{% static 'main.css' %}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+
+</head>
+<body>
+    <section>
+        <!--The navigation bar for the website-->
+        <nav>
+            <h1>Movies' Likes</h1>
+
+            <form method="POST">
+                {% csrf_token %}
+                {% if request.user.is_authenticated %}
+                <h2><a href="#">{{request.user.username}}</a></h2>
+                {% endif %}
+                <input type="text" class="search" placeholder="Search..." name="Search" />
+                {% if request.user.is_authenticated %}
+                <a href="logout/" class="log">Logout</a>
+                {% else %}
+                <a href="login/" class="log">Login</a>
+                {% endif %}
+                <a href="signup/" class="log">Sign Up</a>
+            </form>
+        </nav>
+        <!--We display the movies according to the search result.-->
+        <div class="block">
+
+            {% for movie in movies %}
+            <div class="row">
+                <div class="column">
+                    <img alt="" src="{{movie.picture}}" />
+                    <div class="user-interaction">
+                        {% if request.user in movie.likeUsers.all %}
+                        <a href="{% url 'unlike' movie.title%}"><i class="fa-solid fa-thumbs-up"></i></a>
+                        {% else %}
+                        <a href="{% url 'like' movie.title%}"><i class="fa-regular fa-thumbs-up"></i></a>
+                        {% endif %}
+                        <h3>{{movie.title}}</h3>
+                        {% if request.user in movie.dislikeUsers.all %}
+                        <a href="{% url 'undislike' movie.title%}"><i class="fa-solid fa-thumbs-down"></i></a>
+                        {% else %}
+                        <a href="{% url 'dislike' movie.title%}"><i class="fa-regular fa-thumbs-down"></i></a>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+
+            {% endfor %}
+        </div>
+        <!--Top movies with highest preferences from the audience-->
+        <div class="top">
+            <h2>Top Movies</h2>
+            <ul>
+                {% for movie in topMovies%}
+                <li>{{movie.title}}</li>
+                {% endfor %}
+            </ul>
+        </div>
+    </section>
+</body>
+</html>

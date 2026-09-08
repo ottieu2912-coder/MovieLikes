@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+{% load static %}
+<html>
+<head>
+    <link rel="stylesheet" type="text/css" href="{% static 'signup.css' %}"/>
+</head>
+<body>
+    <form method="POST">
+        {% csrf_token %}
+        {{form}}
+        {% for message in messages %}
+        <p>{{message}}</p>
+        {% endfor %}
+    </form>
+</body>
+</html>
